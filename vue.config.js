@@ -1,6 +1,15 @@
 module.exports = {
     filenameHashing: false,
     chainWebpack: (config) => {
+        if (process.env.NODE_ENV === 'production') {
+            config.output.filename('js/[name].js?[contenthash:8]')
+            config.output.chunkFilename('js/[name].js?[contenthash:8]')
+            config.plugin('extract-css').tap((args) => {
+                args[0].filename = 'css/[name].css?[contenthash:8]'
+                args[0].chunkFilename = 'css/[name].css?[contenthash:8]'
+                return args
+            })
+        }
         // 主题入口不需要生成 html
         config.plugins.store.delete('html-theme_blue')
         config.plugins.store.delete('html-theme_dark')
